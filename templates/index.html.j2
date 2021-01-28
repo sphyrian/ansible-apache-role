@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Accueil</title>
+    <meta charset="utf-8">
+    <link href="styles.css" type="text/css" media="all" rel="stylesheet" />
+  </head>
+  <body>
+    <h2>Accueil du site</h2>
+    <i>Géré par Ansible</i>
+    <br>
+    <ul>
+      <li>Cible : {{ inventory_hostname }}</li>
+      <li>Distribution : {{ ansible_distribution }}</li>
+    </ul>
+  <br> Quelques exemple de syntaxe Jinja2
+  <br>
+  <br>Liste des stagiaires :
+  <table>
+  <thead><td>Prénom</td><td>Nom</td></thead>
+  {# Boucle sur la liste stagiaires #}
+  {% for i in stagiaires %}
+    <tr><td>{{ i.prenom }}</td><td>{{ i.nom|upper }}</td></tr>
+  {% endfor %}
+  </table>
+  </body>
+</html>

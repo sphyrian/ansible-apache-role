@@ -1,0 +1,43 @@
+---
+# tasks file for roles/apache
+
+- name: Installation du package apache2
+  package:
+    name: "{{ apache_package_name }}"
+    state: present
+
+- name: Activation et démarrage du service apache
+  systemd:
+    name: "{{ apache_service_name }}"
+    state: started
+    enabled: yes
+
+- name: Modification du port d'écoute
+  lineinfile:
+    dest: "{{ apache_port_file }}"
+    regex: ^Listen
+    line: "Listen {{ apache_listen_port }}"
+  notify: restart_apache
+
+- name: Recopie du fichier index.html
+  copy:
+    src: index.html
+    dest: "{{ apache_html_files }}"
+  tags: never
+
+- name: Recopie du fichier styles.css
+  copy:
+    src: styles.css
+    dest: "{{ apache_html_files }}"
+
+- name: Recopie du template index.html.j2
+  template:
+    src: index.html.j2
+    dest: "{{ apache_html_files }}/index.html"
+
+- name: Désactivation et arrêt du firewall sur les cibles CentOS
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
+  when: ansible_distribution == "CentOS"
